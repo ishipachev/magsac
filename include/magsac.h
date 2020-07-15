@@ -147,6 +147,16 @@ public:
 		double &score_, // The score to be calculated
 		const double &previous_best_score_); // The score of the previous so-far-the-best model
 
+	// The function to extract inliers mask of a model
+	// for a given threshold
+	void getModelInliersMask(
+		const cv::Mat &points_, // All data points
+		const gcransac::Model &model_, // The model parameter
+		const ModelEstimator &estimator_,
+		const double trehshold_,	// Inlier/outlier threshold
+		std::vector<bool> &inliers_mask_);
+
+
 	size_t number_of_irwls_iters;
 protected:
 	Version magsac_version; // The version of MAGSAC used
@@ -1011,4 +1021,27 @@ void MAGSAC<DatumType, ModelEstimator>::getModelQuality(
 		marginalized_iteration_number_ += log_confidence / log(1.0 - std::pow(inliers[i] / point_number, sample_size));
 	}
 	marginalized_iteration_number_ = marginalized_iteration_number_ / partition_number;
+}
+
+
+// The function to extract inliers mask of a model
+// for a given threshold
+template <class DatumType, class ModelEstimator>
+void MAGSAC<DatumType, ModelEstimator>::getModelInliersMask(
+	const cv::Mat &points_, // All data points
+	const gcransac::Model &model_, // The model parameter
+	const ModelEstimator &estimator_,
+	const double threshold_,	// Inlier/outlier threshold
+	std::vector<bool> &inliers_mask_) {
+	
+	if (inliers_mask_.size() != points_.rows) 
+		inliers_mask_.resize(points_.rows);
+	
+	// Iterate through all points to calculate the implied loss
+	for (size_t point_idx = 0; point_idx < points_.rows; ++point_idx)
+	{
+		// Compare with threshold to set a flag
+		inliers_mask_[point_idx] = threshold_ > estimator_.residualForScoring(points_.row(point_idx), model_.descriptor);
+	}
+	
 }

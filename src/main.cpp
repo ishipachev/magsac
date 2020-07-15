@@ -80,7 +80,7 @@ std::vector<std::string> getAvailableTestScenes(
 	const Dataset dataset_);
 
 // Running tests on the selected dataset
-void runTest(SceneType scene_type_, 
+void runTest(SceneType scene_type_,
 	Dataset dataset_,
 	const double ransac_confidence_,
 	const bool draw_results_,
@@ -90,7 +90,7 @@ void runTest(SceneType scene_type_,
 std::string dataset2str(Dataset dataset_);
 
 int main(int argc, const char* argv[])
-{	
+{
 	/*
 		This is an example showing how MAGSAC or MAGSAC++ is applied to homography or fundamental matrix estimation tasks.
 		This implementation is not the one used in the experiments of the paper.
@@ -111,7 +111,7 @@ int main(int argc, const char* argv[])
 
 	// Run homography estimation on the homogr dataset
 	runTest(SceneType::HomographyScene, Dataset::homogr, ransac_confidence, draw_results, drawing_threshold_homography);
-	
+
 	// Run fundamental matrix estimation on the kusvod2 dataset
 	runTest(SceneType::FundamentalMatrixScene, Dataset::kusvod2, ransac_confidence, draw_results, drawing_threshold_fundamental_matrix);
 
@@ -125,7 +125,7 @@ int main(int argc, const char* argv[])
 	runTest(SceneType::EssentialMatrixScene, Dataset::strecha, ransac_confidence, draw_results, drawing_threshold_essential_matrix);
 
 	return 0;
-} 
+}
 
 void runTest(SceneType scene_type_, // The type of the fitting problem
 	Dataset dataset_, // The dataset currently used for the evaluation
@@ -148,7 +148,7 @@ void runTest(SceneType scene_type_, // The type of the fitting problem
 		cv::destroyAllWindows();
 
 		printf("--------------------------------------------------------------\n");
-		printf("%s estimation on scene \"%s\" from dataset \"%s\".\n", 
+		printf("%s estimation on scene \"%s\" from dataset \"%s\".\n",
 			problem_name.c_str(), scene.c_str(), dataset_name.c_str());
 		printf("--------------------------------------------------------------\n");
 
@@ -162,15 +162,16 @@ void runTest(SceneType scene_type_, // The type of the fitting problem
 				scene, // The scene type
 				false, // A flag to draw and show the results
 				false); // A flag to apply the MAGSAC post-processing to the OpenCV's output
-			
+
 			// Apply MAGSAC with maximum threshold set to a fairly high value
 			printf("\n2. Running MAGSAC with fairly high maximum threshold (%f px)\n", 50.0);
 			testHomographyFitting(ransac_confidence_,
 				50.0, // The maximum sigma value allowed in MAGSAC
 				scene, // The scene type
-				true, // A flag to draw and show the results  
+				false, // A flag to draw and show the results  
 				2.5); // The inlier threshold for visualization.
-		} else if (scene_type_ == SceneType::FundamentalMatrixScene)
+		}
+		else if (scene_type_ == SceneType::FundamentalMatrixScene)
 		{
 			// Apply the homography estimation method built into OpenCV
 			printf("1. Running OpenCV's RANSAC with threshold %f px\n", drawing_threshold_);
@@ -179,7 +180,7 @@ void runTest(SceneType scene_type_, // The type of the fitting problem
 				scene, // The scene type
 				false, // A flag to draw and show the results
 				false); // A flag to apply the MAGSAC post-processing to the OpenCV's output
-			
+
 			// Apply MAGSAC with fairly high maximum threshold
 			printf("\n2. Running MAGSAC with fairly high maximum threshold (%f px)\n", 5.0);
 			testFundamentalMatrixFitting(ransac_confidence_, // The required confidence in the results
@@ -188,7 +189,8 @@ void runTest(SceneType scene_type_, // The type of the fitting problem
 				draw_results_, // A flag to draw and show the results 
 				drawing_threshold_); // The inlier threshold for visualization.
 		// Run this part of the code if the problem is essential matrix fitting
-		} else if (scene_type_ == SceneType::EssentialMatrixScene)
+		}
+		else if (scene_type_ == SceneType::EssentialMatrixScene)
 		{
 			// Apply the homography estimation method built into OpenCV
 			printf("1. Running OpenCV's RANSAC with threshold %f px\n", drawing_threshold_);
@@ -202,7 +204,7 @@ void runTest(SceneType scene_type_, // The type of the fitting problem
 			testEssentialMatrixFitting(ransac_confidence_, // The required confidence in the results
 				5.0, // The maximum sigma value allowed in MAGSAC
 				scene, // The scene type
-				true, // A flag to draw and show the results 
+				false, // A flag to draw and show the results 
 				drawing_threshold_); // The inlier threshold for visualization.
 		}
 
@@ -213,27 +215,27 @@ void runTest(SceneType scene_type_, // The type of the fitting problem
 
 std::string dataset2str(Dataset dataset_)
 {
-	switch (dataset_)	
+	switch (dataset_)
 	{
-		case Dataset::strecha:
-			return "strecha";
-		case Dataset::homogr:
-			return "homogr";
-		case Dataset::extremeview:
-			return "extremeview";
-		case Dataset::kusvod2:
-			return "kusvod2";
-		case Dataset::adelaidermf:
-			return "adelaidermf";
-		case Dataset::multih:
-			return "multih";
-		default:
-			return "unknown";
+	case Dataset::strecha:
+		return "strecha";
+	case Dataset::homogr:
+		return "homogr";
+	case Dataset::extremeview:
+		return "extremeview";
+	case Dataset::kusvod2:
+		return "kusvod2";
+	case Dataset::adelaidermf:
+		return "adelaidermf";
+	case Dataset::multih:
+		return "multih";
+	default:
+		return "unknown";
 	}
 }
 
 std::vector<std::string> getAvailableTestScenes(
-	const SceneType scene_type_, 
+	const SceneType scene_type_,
 	const Dataset dataset_)
 {
 	switch (scene_type_)
@@ -244,49 +246,49 @@ std::vector<std::string> getAvailableTestScenes(
 		case Dataset::strecha:
 			return { "fountain" };
 		}
-	
-	case SceneType::HomographyScene: // Available test scenes for homography estimation
-		switch (dataset_)	
-		{	
-			case Dataset::homogr:
-				return { "LePoint1", "LePoint2", "LePoint3", // "homogr" dataset
-					"graf", "ExtremeZoom", "city", 
-					"CapitalRegion", "BruggeTower", "BruggeSquare", 
-					"BostonLib", "boat", "adam", 
-					"WhiteBoard", "Eiffel", "Brussels", 
-					"Boston"};
-			case Dataset::extremeview:
-				return {"extremeview/adam", "extremeview/cafe", "extremeview/cat", // "EVD" (i.e. extremeview) dataset
-					"extremeview/dum", "extremeview/face", "extremeview/fox", 
-					"extremeview/girl", "extremeview/graf", "extremeview/grand", 
-					"extremeview/index", "extremeview/mag", "extremeview/pkk", 
-					"extremeview/shop", "extremeview/there", "extremeview/vin"};
 
-			default:
-				return std::vector<std::string>();
+	case SceneType::HomographyScene: // Available test scenes for homography estimation
+		switch (dataset_)
+		{
+		case Dataset::homogr:
+			return { "LePoint1", "LePoint2", "LePoint3", // "homogr" dataset
+				"graf", "ExtremeZoom", "city",
+				"CapitalRegion", "BruggeTower", "BruggeSquare",
+				"BostonLib", "boat", "adam",
+				"WhiteBoard", "Eiffel", "Brussels",
+				"Boston" };
+		case Dataset::extremeview:
+			return { "extremeview/adam", "extremeview/cafe", "extremeview/cat", // "EVD" (i.e. extremeview) dataset
+				"extremeview/dum", "extremeview/face", "extremeview/fox",
+				"extremeview/girl", "extremeview/graf", "extremeview/grand",
+				"extremeview/index", "extremeview/mag", "extremeview/pkk",
+				"extremeview/shop", "extremeview/there", "extremeview/vin" };
+
+		default:
+			return std::vector<std::string>();
 		}
 
 	case SceneType::FundamentalMatrixScene:
-		switch (dataset_)	
-		{	
-			case Dataset::kusvod2:
-				return {"corr", "booksh", "box",
-					"castle", "graff", "head",
-					"kampa", "leafs", "plant",
-					"rotunda", "shout", "valbonne",
-					"wall", "wash", "zoom",
-					"Kyoto"};
-			case Dataset::adelaidermf:
-				return { "barrsmith", "bonhall", "bonython", 
-					"elderhalla", "elderhallb",
-					"hartley", "johnssonb", "ladysymon", 
-					"library", "napiera", "napierb", 
-					"nese", "oldclassicswing", "physics", 
-					"sene", "unihouse", "unionhouse"};
-			case Dataset::multih:
-				return {"boxesandbooks", "glasscaseb", "stairs"};
-			default:
-				return std::vector<std::string>();
+		switch (dataset_)
+		{
+		case Dataset::kusvod2:
+			return { "corr", "booksh", "box",
+				"castle", "graff", "head",
+				"kampa", "leafs", "plant",
+				"rotunda", "shout", "valbonne",
+				"wall", "wash", "zoom",
+				"Kyoto" };
+		case Dataset::adelaidermf:
+			return { "barrsmith", "bonhall", "bonython",
+				"elderhalla", "elderhallb",
+				"hartley", "johnssonb", "ladysymon",
+				"library", "napiera", "napierb",
+				"nese", "oldclassicswing", "physics",
+				"sene", "unihouse", "unionhouse" };
+		case Dataset::multih:
+			return { "boxesandbooks", "glasscaseb", "stairs" };
+		default:
+			return std::vector<std::string>();
 		}
 	default:
 		return std::vector<std::string>();
@@ -373,12 +375,12 @@ void testEssentialMatrixFitting(
 	magsac::utils::DefaultEssentialMatrixEstimator estimator(
 		intrinsics_source,
 		intrinsics_destination,
-		0.0); 
+		0.0);
 	gcransac::EssentialMatrix model; // The estimated model
-	
+
 	printf("\tEstimated model = '%s'.\n", "essential matrix");
 	printf("\tNumber of correspondences loaded = %d.\n", static_cast<int>(N));
-	
+
 	// Initialize the sampler used for selecting minimal samples
 	gcransac::sampler::UniformSampler main_sampler(&normalized_points);
 
@@ -406,7 +408,14 @@ void testEssentialMatrixFitting(
 
 	printf("\tActual number of iterations drawn by MAGSAC at %.2f confidence: %d\n", ransac_confidence_, iteration_number);
 	printf("\tElapsed time: %f secs\n", elapsed_seconds.count());
-	
+
+
+	std::vector<bool> inliers_mask;
+	double inlier_thd = maximum_threshold_;
+	magsac.getModelInliersMask(points, model, estimator, inlier_thd, inliers_mask);
+	uint inliers_cnt = std::count(inliers_mask.begin(), inliers_mask.end(), true);
+	printf("\tNumber of inliers for threshold %2.1f: %d\n", inlier_thd, inliers_cnt);
+
 	// Visualization part.
 	// Inliers are selected using threshold and the estimated model. 
 	// This part is not necessary and is only for visualization purposes. 
@@ -427,7 +436,7 @@ void testEssentialMatrixFitting(
 		}
 	}
 
-	printf("\tNumber of points closer than %f is %d\n", 
+	printf("\tNumber of points closer than %f is %d\n",
 		drawing_threshold_, inlier_number);
 
 	if (draw_results_)
@@ -488,7 +497,7 @@ void testFundamentalMatrixFitting(
 	if (N == 0) // If there are no points, return
 	{
 		fprintf(stderr, "A problem occured when loading the annotated points for test scene '%s'\n", test_scene_.c_str());
-		return; 
+		return;
 	}
 
 	magsac::utils::DefaultFundamentalMatrixEstimator estimator(maximum_threshold_); // The robust homography estimator class containing the function for the fitting and residual calculation
@@ -520,7 +529,7 @@ void testFundamentalMatrixFitting(
 
 	// Initialize the sampler used for selecting minimal samples
 	gcransac::sampler::UniformSampler main_sampler(&points);
-	 
+
 	MAGSAC<cv::Mat, magsac::utils::DefaultFundamentalMatrixEstimator> magsac;
 	magsac.setMaximumThreshold(maximum_threshold_); // The maximum noise scale sigma allowed
 	magsac.setIterationLimit(1e4); // Iteration limit to interrupt the cases when the algorithm run too long.
@@ -557,6 +566,12 @@ void testFundamentalMatrixFitting(
 	rmse = sqrt(rmse / static_cast<double>(inlier_number));
 	printf("\tRMSE error: %f px\n", rmse);
 
+	std::vector<bool> inliers_mask;
+	double inlier_thd = maximum_threshold_;
+	magsac.getModelInliersMask(points, model, estimator, inlier_thd, inliers_mask);
+	uint inliers_cnt = std::count(inliers_mask.begin(), inliers_mask.end(), true);
+	printf("\tNumber of inliers for threshold %2.1f: %d\n", inlier_thd, inliers_cnt);
+
 	// Visualization part.
 	// Inliers are selected using threshold and the estimated model. 
 	// This part is not necessary and is only for visualization purposes. 
@@ -569,7 +584,7 @@ void testFundamentalMatrixFitting(
 			// Computing the residual of the point given the estimated model
 			auto residual = estimator.residual(points.row(pt_idx),
 				model.descriptor);
-			
+
 			// Change the label to 'inlier' if the residual is smaller than the threshold
 			if (drawing_threshold_ >= residual)
 				obtained_labeling[pt_idx] = 1;
@@ -587,7 +602,7 @@ void testFundamentalMatrixFitting(
 			900);
 		out_image.release();
 	}
-	
+
 	// Clean up the memory occupied by the images
 	image1.release();
 	image2.release();
@@ -661,7 +676,7 @@ void testHomographyFitting(
 	printf("\tEstimated model = 'homography'.\n");
 	printf("\tNumber of correspondences loaded = %d.\n", static_cast<int>(point_number));
 	printf("\tNumber of ground truth inliers = %d.\n", static_cast<int>(reference_inlier_number));
-	printf("\tTheoretical RANSAC iteration number at %.2f confidence = %d.\n", 
+	printf("\tTheoretical RANSAC iteration number at %.2f confidence = %d.\n",
 		ransac_confidence_, static_cast<int>(log(1.0 - ransac_confidence_) / log(1.0 - pow(static_cast<double>(reference_inlier_number) / static_cast<double>(point_number), 4))));
 
 	// Initialize the sampler used for selecting minimal samples
@@ -675,7 +690,7 @@ void testHomographyFitting(
 	int iteration_number = 0; // Number of iterations required
 	ModelScore score; // The model score
 
-	std::chrono::time_point<std::chrono::system_clock> end, 
+	std::chrono::time_point<std::chrono::system_clock> end,
 		start = std::chrono::system_clock::now();
 	magsac.run(points, // The data points
 		ransac_confidence_, // The required confidence in the results
@@ -685,8 +700,8 @@ void testHomographyFitting(
 		iteration_number, // The number of iterations
 		score); // The score of the estimated model
 	end = std::chrono::system_clock::now();
-	 
-	std::chrono::duration<double> elapsed_seconds = end - start; 
+
+	std::chrono::duration<double> elapsed_seconds = end - start;
 	std::time_t end_time = std::chrono::system_clock::to_time_t(end);
 
 	printf("\tActual number of iterations drawn by MAGSAC at %.2f confidence: %d\n", ransac_confidence_, iteration_number);
@@ -707,7 +722,13 @@ void testHomographyFitting(
 		rmse += estimator.squaredResidual(points.row(inlier_idx), model);
 	rmse = sqrt(rmse / static_cast<double>(reference_inlier_number));
 	printf("\tRMSE error: %f px\n", rmse);
-	
+
+	std::vector<bool> inliers_mask;
+	double inlier_thd = maximum_threshold_;
+	magsac.getModelInliersMask(points, model, estimator, inlier_thd, inliers_mask);
+	uint inliers_cnt = std::count(inliers_mask.begin(), inliers_mask.end(), true);
+	printf("\tNumber of inliers for threshold %2.1f: %d\n", inlier_thd, inliers_cnt);
+
 	// Visualization part.
 	// Inliers are selected using threshold and the estimated model. 
 	// This part is not necessary and is only for visualization purposes. 
@@ -721,14 +742,14 @@ void testHomographyFitting(
 			// Computing the residual of the point given the estimated model
 			auto residual = sqrt(estimator.residual(points.row(point_idx),
 				model));
-			
+
 			// Change the label to 'inlier' if the residual is smaller than the threshold
 			if (drawing_threshold_ >= residual)
 				obtained_labeling[point_idx] = 1;
 		}
 
 		cv::Mat out_image;
-		
+
 		// Draw the matches to the images
 		drawMatches<double, int>(points, // All points 
 			obtained_labeling, // The labeling obtained by OpenCV
@@ -785,7 +806,7 @@ void opencvHomographyFitting(
 		ground_truth_labels); // The reference labeling
 
 	// The number of points in the scene
-	const size_t point_number = points.rows; 
+	const size_t point_number = points.rows;
 
 	if (point_number == 0) // If there are no points, return
 	{
@@ -828,20 +849,20 @@ void opencvHomographyFitting(
 
 	// The labeling obtained by OpenCV
 	std::vector<int> obtained_labeling(points.rows, 0);
-	
+
 	// Variables to measure time
-	std::chrono::time_point<std::chrono::system_clock> end, 
+	std::chrono::time_point<std::chrono::system_clock> end,
 		start = std::chrono::system_clock::now();
-	
+
 	// Estimating the homography matrix by OpenCV's RANSAC
 	cv::Mat cv_homography = cv::findHomography(cv::Mat(points, roi1), // The points in the first image
 		cv::Mat(points, roi2), // The points in the second image
-        cv::RANSAC, // The method used for the fitting
+		cv::RANSAC, // The method used for the fitting
 		threshold_, // The inlier-outlier threshold
 		obtained_labeling); // The obtained labeling
-	
+
 	// Convert cv::Mat to Eigen::Matrix3d 
-	Eigen::Matrix3d homography = 
+	Eigen::Matrix3d homography =
 		Eigen::Map<Eigen::Matrix<double, 3, 3, Eigen::RowMajor>>(cv_homography.ptr<double>(), 3, 3);
 
 	end = std::chrono::system_clock::now();
@@ -858,7 +879,7 @@ void opencvHomographyFitting(
 	{
 		fprintf(stderr, "The MAGSAC post-processing is not implemented yet.\n");
 	}
-	 
+
 	// Compute the root mean square error (RMSE) using the ground truth inliers
 	double rmse = 0; // The RMSE error
 	// Iterate through all inliers and calculate the error
@@ -958,39 +979,39 @@ void opencvFundamentalMatrixFitting(
 
 	// Select the inliers from the labeling
 	std::vector<int> ground_truth_inliers = getSubsetFromLabeling(ground_truth_labels, 1), // The indices of the inliers from the reference labeling
-		 refined_inliers = getSubsetFromLabeling(refined_labels, 1); // The indices of the inlier from the refined labeling
+		refined_inliers = getSubsetFromLabeling(refined_labels, 1); // The indices of the inlier from the refined labeling
 
-	// If the refined labeling has more inliers than the original one, use the refined.
-	// It can happen that the model fit to the inliers of the reference labeling is close to being degenerate.
-	// In those cases, enforcing, e.g., the rank-two constraint leads to a model which selects fewer inliers than the original one. 
-	if (refined_inliers.size() > ground_truth_inliers.size()) 
+ // If the refined labeling has more inliers than the original one, use the refined.
+ // It can happen that the model fit to the inliers of the reference labeling is close to being degenerate.
+ // In those cases, enforcing, e.g., the rank-two constraint leads to a model which selects fewer inliers than the original one. 
+	if (refined_inliers.size() > ground_truth_inliers.size())
 		refined_inliers.swap(ground_truth_inliers);
 
 	// Number of inliers in the reference labeling
 	const size_t reference_inlier_number = ground_truth_inliers.size();
-	 
+
 	printf("\tEstimated model = 'fundamental matrix'.\n");
 	printf("\tNumber of correspondences loaded = %d.\n", static_cast<int>(point_number));
 	printf("\tNumber of ground truth inliers = %d.\n", static_cast<int>(reference_inlier_number));
 
 	// Define location of sub matrices in data matrix
-	cv::Rect roi1( 0, 0, 2, point_number ); // The ROI of the points in the source image
-	cv::Rect roi2( 2, 0, 2, point_number ); // The ROI of the points in the destination image
+	cv::Rect roi1(0, 0, 2, point_number); // The ROI of the points in the source image
+	cv::Rect roi2(2, 0, 2, point_number); // The ROI of the points in the destination image
 
 	// The labeling obtained by OpenCV
 	std::vector<uchar> obtained_labeling(points.rows, 0);
 
 	// Variables to measure the time
-	std::chrono::time_point<std::chrono::system_clock> end, 
+	std::chrono::time_point<std::chrono::system_clock> end,
 		start = std::chrono::system_clock::now();
 
 	// Fundamental matrix estimation using the OpenCV's function
 	cv::Mat cv_fundamental_matrix = cv::findFundamentalMat(cv::Mat(points, roi1), // The points in the source image
 		cv::Mat(points, roi2), // The points in the destination image
-        cv::RANSAC,
+		cv::RANSAC,
 		threshold_,
 		ransac_confidence_,
-		obtained_labeling); 
+		obtained_labeling);
 	end = std::chrono::system_clock::now();
 	std::chrono::duration<double> elapsed_seconds = end - start;
 	std::time_t end_time = std::chrono::system_clock::to_time_t(end);
@@ -1004,20 +1025,20 @@ void opencvFundamentalMatrixFitting(
 	// Applying the MAGSAC post-processing step using the OpenCV's output
 	// as the input.
 	if (with_magsac_post_processing_)
-	{		
+	{
 		fprintf(stderr, "\tPost-processing is not implemented yet.\n");
 	}
-	 
+
 	// Compute the RMSE given the ground truth inliers
 	double rmse = 0, error;
 	size_t inlier_number = 0;
 	for (const auto& inlier_idx : ground_truth_inliers)
 	{
-		error = estimator.residual(points.row(inlier_idx), 
+		error = estimator.residual(points.row(inlier_idx),
 			fundamental_matrix);
 		rmse += error;
 	}
-	
+
 	rmse = sqrt(rmse / static_cast<double>(reference_inlier_number));
 	printf("\tRMSE error: %f px\n", rmse);
 
@@ -1071,7 +1092,7 @@ void opencvEssentialMatrixFitting(
 	cv::Mat points; // The point correspondences, each is of format x1 y1 x2 y2
 	Eigen::Matrix3d intrinsics_source, // The intrinsic parameters of the source camera
 		intrinsics_destination; // The intrinsic parameters of the destination camera
-	
+
 	// A function loading the points from files
 	readPoints<4>("data/essential_matrix/" + test_scene_ + "_pts.txt",
 		points);
@@ -1131,7 +1152,7 @@ void opencvEssentialMatrixFitting(
 	cv::Mat cv_essential_matrix = cv::findEssentialMat(cv::Mat(normalized_points, roi1), // The points in the first image
 		cv::Mat(normalized_points, roi2), // The points in the second image
 		cv::Mat::eye(3, 3, CV_64F), // The intrinsic camera matrix of the source image
-        cv::RANSAC, // The method used for the fitting
+		cv::RANSAC, // The method used for the fitting
 		ransac_confidence_, // The RANSAC confidence
 		normalized_threshold, // The inlier-outlier threshold
 		obtained_labeling); // The obtained labeling
@@ -1144,11 +1165,11 @@ void opencvEssentialMatrixFitting(
 
 	// Calculate the processing time of OpenCV
 	std::chrono::duration<double> elapsed_seconds = end - start;
-	
+
 	printf("\tElapsed time: %f secs\n", elapsed_seconds.count());
 
 	size_t inlier_number = 0;
-	
+
 	// Visualization part.
 	for (auto pt_idx = 0; pt_idx < points.rows; ++pt_idx)
 	{
