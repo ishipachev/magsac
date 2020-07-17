@@ -30,10 +30,11 @@ namespace magsac
 				return residual(point_, model_.descriptor);
 			}
 
+      // Helper function to be consistent by having the same
       inline double residualOtherForScoring(const cv::Mat& point_,
 				const gcransac::Model& model_) const
 			{
-				return std::sqrt(residual(point_, model_.descriptor));
+				return residual(point_, model_.descriptor);
 			}
 
 			static constexpr double getSigmaQuantile()

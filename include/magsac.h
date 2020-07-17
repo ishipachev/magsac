@@ -1050,7 +1050,7 @@ void MAGSAC<DatumType, ModelEstimator>::getModelInliersMask(
 		// Compare with threshold to set a flag
 		inliers_mask_[point_idx] = threshold_ > estimator_.residualForScoring(points_.row(point_idx), model_.descriptor);
 	}
-  printf("\t\tTotal inliers by epipolar error: %d\n", std::count(inliers_mask_.begin(), inliers_mask_.end(), true));
+  //printf("\t\tTotal inliers by epipolar error: %d\n", std::count(inliers_mask_.begin(), inliers_mask_.end(), true));
   
 
   // TODO: Right 
@@ -1060,6 +1060,6 @@ void MAGSAC<DatumType, ModelEstimator>::getModelInliersMask(
 		//inliers_mask_[point_idx] = threshold_ > estimator_.residualForScoring(points_.row(point_idx), model_.descriptor);
     inliers_mask_[point_idx] = threshold_ > estimator_.residualOtherForScoring(points_.row(point_idx), model_.descriptor);
 	}
-  printf("\t\tTotal inliers by sampson error: %d\n", std::count(inliers_mask_.begin(), inliers_mask_.end(), true));
+  //printf("\t\tTotal inliers by sampson error: %d\n", std::count(inliers_mask_.begin(), inliers_mask_.end(), true));
 
 }
