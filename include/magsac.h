@@ -750,8 +750,13 @@ bool MAGSAC<DatumType, ModelEstimator>::sigmaConsensusPlusPlus(
 		}
 
 		// Calculate the weight of each point
-		for (const auto &[residual, idx] : residuals)
+		//IS: C++11 compatible part
+		//for (const auto &[residual, idx] : residuals)
+		//{
+    for (const auto residualAndIdx : residuals)
 		{
+      double residual = std::get<0>(residualAndIdx);
+      size_t idx = std::get<1>(residualAndIdx);
 			// The weight
 			double weight = 0.0;
 			// If the residual is ~0, the point fits perfectly and it is handled differently
