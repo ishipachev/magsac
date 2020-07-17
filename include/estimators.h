@@ -30,6 +30,12 @@ namespace magsac
 				return residual(point_, model_.descriptor);
 			}
 
+      inline double residualOtherForScoring(const cv::Mat& point_,
+				const gcransac::Model& model_) const
+			{
+				return std::sqrt(residual(point_, model_.descriptor));
+			}
+
 			static constexpr double getSigmaQuantile()
 			{
 				return 3.64;
@@ -103,6 +109,14 @@ namespace magsac
                 const gcransac::Model& model_) const
 			{
 				return std::sqrt(gcransac::estimator::FundamentalMatrixEstimator<_MinimalSolverEngine, _NonMinimalSolverEngine>::squaredSymmetricEpipolarDistance(point_, model_.descriptor));
+			}
+
+      // IS: Additional scoring which can be used further to compare resulting model with
+      // other models
+			inline double residualOtherForScoring(const cv::Mat& point_,
+                const gcransac::Model& model_) const
+			{
+				return std::sqrt(gcransac::estimator::FundamentalMatrixEstimator<_MinimalSolverEngine, _NonMinimalSolverEngine>::squaredSampsonDistance(point_, model_.descriptor));
 			}
 
 			static constexpr double getSigmaQuantile()
